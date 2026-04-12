@@ -1,18 +1,18 @@
 \documentclass[aspectratio=169, 10pt]{beamer}
 
 \usepackage[utf8]{inputenc}
-\usepackage[italian]{babel}
+\usepackage[english]{babel}
 \usepackage{amsmath, amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{xcolor}
 
-% --- COLORI UNIVERSITÀ DI FIRENZE ---
+% --- FLORENCE UNIVERSITY COLORS ---
 \definecolor{UniFiBlue}{RGB}{0, 51, 102}
 \definecolor{UniFiLightBlue}{RGB}{204, 220, 235}
 \definecolor{UniFiOrange}{RGB}{237, 107, 6}
 
-% --- SETUP TEMA BEAMER ---
+% --- BEAMER THEME SETUP ---
 \usetheme{Madrid}
 \usecolortheme[named=UniFiBlue]{structure}
 
@@ -27,11 +27,11 @@
 
 \usefonttheme{professionalfonts}
 
-% --- INFORMAZIONI FRONTESPIZIO ---
-\title[Dinamiche di Apprendimento Profondo]{\textbf{Analisi Empirica della Dinamica di Apprendimento:}\\ Double Descent, Neural Collapse e CKA}
+% --- TITLE PAGE INFORMATION ---
+\title[Deep Learning Dynamics]{\textbf{Empirical Analysis of Learning Dynamics:}\\ Double Descent, Neural Collapse and CKA}
 \author[Marco Bardazzi]{Marco Bardazzi}
 \institute[UniFi]{
-    \textbf{Università degli Studi di Firenze}\\
+    \textbf{University of Florence}\\
     Computer Vision and Intelligent Media Recognition\\
     \vspace{0.3cm}
 }
@@ -45,251 +45,251 @@
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{Agenda della Presentazione}
+\begin{frame}{Presentation Agenda}
     \tableofcontents
 \end{frame}
 
 % ===================================================
-\section{Introduzione Teorica}
+\section{Theoretical Introduction}
 % ===================================================
 
 % ---------------------------------------------------
-\begin{frame}{Il Paradigma Moderno: Deep Double Descent}
+\begin{frame}{The Modern Paradigm: Deep Double Descent}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            \textbf{La Teoria Classica:}
+            \textbf{Classical Theory:}
             \begin{itemize}
-                \item Trade-off Bias-Varianza a forma di ``U''.
-                \item Modelli complessi memorizzano il rumore (``overfitting'').
+                \item ``U''-shaped Bias-Variance Trade-off.
+                \item Complex models memorize noise (``overfitting'').
             \end{itemize}
             \vspace{0.3cm}
-            \textbf{La Realtà del Deep Learning:}
+            \textbf{The Reality of Deep Learning:}
             \begin{itemize}
-                \item Superata la \textbf{soglia di interpolazione}, l'errore di test torna a scendere.
-                \item Modelli massivamente sovra-parametrizzati generalizzano in modo eccellente.
+                \item Past the \textbf{interpolation threshold}, the test error starts decreasing again.
+                \item Massively over-parameterized models generalize excellently.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 1, Colonna 1 (Exp 1: Test Error)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 1, Column 1 (Exp 1: Test Error)
                 \includegraphics[width=\linewidth]{1.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 1: Test Error\\ (Riga 1, Col 1)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 1: Test Error\\ (Row 1, Col 1)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{Cos'è il Neural Collapse (NC)?}
-    Nelle fasi terminali dell'addestramento, le rappresentazioni dell'ultimo strato mostrano 4 proprietà geometriche (Papyan et al., 2020):
+\begin{frame}{What is Neural Collapse (NC)?}
+    In the terminal phases of training, last-layer representations exhibit 4 geometric properties (Papyan et al., 2020):
     \vspace{0.3cm}
     \begin{enumerate}
-        \item \textbf{NC1 (Variability Collapse):} Le attivazioni convergono verso il loro centro di classe (varianza intra-classe $\to 0$).
-        \item \textbf{NC2 (Simplex ETF):} I centri delle classi si dispongono simmetricamente, massimizzando la distanza (Equiangular Tight Frame).
-        \item \textbf{NC3 (Self-Duality):} I pesi del classificatore lineare si allineano perfettamente ai centri di classe.
-        \item \textbf{NC4 (NCC):} Le previsioni della rete coincidono con una classificazione Nearest Class Center.
+        \item \textbf{NC1 (Variability Collapse):} Activations converge to their class center (within-class variance $\to 0$).
+        \item \textbf{NC2 (Simplex ETF):} Class centers arrange symmetrically, maximizing distance (Equiangular Tight Frame).
+        \item \textbf{NC3 (Self-Duality):} The linear classifier weights align perfectly with the class centers.
+        \item \textbf{NC4 (NCC):} Network predictions coincide with a Nearest Class Center classification.
     \end{enumerate}
 \end{frame}
 
 % ===================================================
-\section{Setup Sperimentale}
+\section{Experimental Setup}
 % ===================================================
 
 % ---------------------------------------------------
-\begin{frame}{Setup Sperimentale}
-    \textbf{Obiettivo:} Unire empiricamente Double Descent, Neural Collapse e analisi delle similarità tra strati (CKA).
+\begin{frame}{Experimental Setup}
+    \textbf{Objective:} Empirically unify Double Descent, Neural Collapse, and layer similarity analysis (CKA).
     
     \vspace{0.3cm}
     \begin{itemize}
-        \item \textbf{Dataset:} MNIST-1D. Dati a bassa dimensionalità ma morfologicamente complessi.
-        \item \textbf{Rumore introdotto:} \textcolor{red}{\textbf{20\% Label Noise}}. Forza la rete a memorizzare etichette errate, esacerbando il picco di interpolazione.
-        \item \textbf{Architetture:} \texttt{ResNet1D} e \texttt{StandardCNN1D}.
-        \item \textbf{Scaling:} Larghezza variabile da $W=2$ a $W=64$ ($10^2 \to 10^5$ param).
-        \item \textbf{Ottimizzatori:} SGD vs Adam.
+        \item \textbf{Dataset:} MNIST-1D. Low-dimensional but morphologically complex data.
+        \item \textbf{Injected noise:} \textcolor{red}{\textbf{20\% Label Noise}}. Forces the network to memorize incorrect labels, exacerbating the interpolation peak.
+        \item \textbf{Architectures:} \texttt{ResNet1D} and \texttt{StandardCNN1D}.
+        \item \textbf{Scaling:} Variable width from $W=2$ to $W=64$ ($10^2 \to 10^5$ params).
+        \item \textbf{Optimizers:} SGD vs Adam.
     \end{itemize}
 \end{frame}
 
 % ===================================================
-\section{Analisi dei Risultati (Exp 1, 2, 3)}
+\section{Results Analysis (Exp 1, 2, 3)}
 % ===================================================
 
 % ---------------------------------------------------
-\begin{frame}{Risultati: La Rottura del Collapse nel Regime Critico}
+\begin{frame}{Results: The Breakdown of Collapse in the Critical Regime}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{itemize}
-                \item L'errore di generalizzazione correla perfettamente con la metrica \textbf{NC1}.
-                \item Attorno ai $10^3-10^4$ parametri, la varianza intra-classe esplode. Il modello rompe la sua geometria per memorizzare il rumore.
-                \item Superata la soglia ($>10^4$), il Neural Collapse si ripristina e l'errore crolla.
+                \item Generalization error correlates perfectly with the \textbf{NC1} metric.
+                \item Around $10^3-10^4$ parameters, within-class variance explodes. The model breaks its geometry to memorize noise.
+                \item Past the threshold ($>10^4$), Neural Collapse is restored and the error drops.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 1, Colonna 2 (Exp 1: NC1)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 1, Column 2 (Exp 1: NC1)
                  \includegraphics[width=\linewidth]{2.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 1: NC1 (Variability)\\ (Riga 1, Col 2)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 1: NC1 (Variability)\\ (Row 1, Col 2)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{L'Impatto dell'Ottimizzatore: SGD domina Adam}
+\begin{frame}{The Impact of the Optimizer: SGD dominates Adam}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{itemize}
-                \item Nel regime ``overparameterized'', \textbf{SGD} raggiunge configurazioni geometriche (NC2) molto migliori.
-                \item \textbf{Adam} tende a bloccarsi in minimi locali sub-ottimali dal punto di vista geometrico.
-                \item \textbf{Perché?} SGD possiede un \textit{bias induttivo implicito} che penalizza la norma dei pesi e favorisce margini ampi e simmetrici.
+                \item In the ``overparameterized'' regime, \textbf{SGD} achieves much better geometric configurations (NC2).
+                \item \textbf{Adam} tends to get stuck in geometrically sub-optimal local minima.
+                \item \textbf{Why?} SGD possesses an \textit{implicit inductive bias} that penalizes weight norms and favors wide, symmetric margins.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 1, Colonna 3 (Exp 1: NC2)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 1, Column 3 (Exp 1: NC2)
                  \includegraphics[width=\linewidth]{3.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 1: NC2 (Simplex ETF)\\ (Riga 1, Col 3)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 1: NC2 (Simplex ETF)\\ (Row 1, Col 3)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{Le Dinamiche di Addestramento (Epoch-wise)}
+\begin{frame}{Training Dynamics (Epoch-wise)}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            Confronto tra due configurazioni:
+            Comparison between two configurations:
             \vspace{0.2cm}
             \begin{itemize}
-                \item \textbf{Critical ($W=12$):} Posto sul picco del Double Descent. La superficie di perdita è frammentata, portando a enormi oscillazioni dell'errore.
-                \item \textbf{Large ($W=64$):} La capacità in eccesso permette un apprendimento rapido delle feature robuste, relegando la memorizzazione del rumore senza distruggere la generalizzazione.
+                \item \textbf{Critical ($W=12$):} Located on the Double Descent peak. The loss surface is highly fragmented, leading to massive error oscillations.
+                \item \textbf{Large ($W=64$):} Excess capacity allows rapid learning of robust features, relegating noise memorization without destroying generalization.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 2, Colonna 2 (Exp 2: Epoch-wise Test Error)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 2, Column 2 (Exp 2: Epoch-wise Test Error)
                  \includegraphics[width=\linewidth]{4.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 2: Epoch-wise Error\\ (Riga 2, Col 2)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 2: Epoch-wise Error\\ (Row 2, Col 2)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{I Limiti Dimensionali del Neural Collapse}
+\begin{frame}{Dimensional Limits of Neural Collapse}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{itemize}
-                \item Matematicamente, un Simplex ETF perfetto con $K$ classi richiede una dimensione latente \textbf{$d \ge K-1$}.
-                \item Per MNIST-1D ($K=10$), ci aspettiamo il collasso a partire da $d=9$.
-                \item \textbf{Verifica Empirica:} NC2 crolla verticalmente e si stabilizza a zero esattamente in corrispondenza del limite teorico.
+                \item Mathematically, a perfect Simplex ETF with $K$ classes requires a latent dimension of \textbf{$d \ge K-1$}.
+                \item For MNIST-1D ($K=10$), we expect collapse starting from $d=9$.
+                \item \textbf{Empirical Verification:} NC2 drops vertically and stabilizes at zero exactly at the theoretical limit.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 2, Colonna 4 (Exp 3: Gen NC NC2 vs dim)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 2, Column 4 (Exp 3: Gen NC NC2 vs dim)
                  \includegraphics[width=\linewidth]{5.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 3: NC2 vs dim\\ (Riga 2, Col 4)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 3: NC2 vs dim\\ (Row 2, Col 4)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ===================================================
-\section{Analisi delle Rappresentazioni (CKA)}
+\section{Representations Analysis (CKA)}
 % ===================================================
 
 % ---------------------------------------------------
-\begin{frame}{CKA: Differenze Strutturali (Small vs Large)}
+\begin{frame}{CKA: Structural Differences (Small vs Large)}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            \textbf{CKA:} Misura la similarità geometrica ($0 \to 1$).
+            \textbf{CKA:} Measures geometric similarity ($0 \to 1$).
             \vspace{0.2cm}
             \begin{itemize}
-                \item \textbf{L0/L1:} CKA elevato. Reti critiche e sovra-parametrizzate estraggono le stesse feature a basso livello.
-                \item \textbf{L3 (Profondo):} CKA crolla ($\approx 0.34$).
-                \item Il modello piccolo non ha i gradi di libertà per creare il Simplex ETF, generando una topologia finale diametralmente opposta.
+                \item \textbf{L0/L1:} High CKA. Critical and over-parameterized networks extract the same low-level features.
+                \item \textbf{L3 (Deep):} CKA drops ($\approx 0.34$).
+                \item The small model lacks the degrees of freedom to create the Simplex ETF, resulting in a diametrically opposed final topology.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 3, Colonna 1 (Exp 4A: Heatmap CKA)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 3, Column 1 (Exp 4A: Heatmap CKA)
                  \includegraphics[width=\linewidth]{6.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 4A: Heatmap\\ (Riga 3, Col 1)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 4A: Heatmap\\ (Row 3, Col 1)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{CKA: La Deriva nel Tempo (Epoch Drift)}
+\begin{frame}{CKA: Drift Over Time (Epoch Drift)}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            Confronto delle attivazioni epoche successive rispetto all'epoca 1:
+            Comparison of activations in successive epochs relative to epoch 1:
             \vspace{0.2cm}
             \begin{itemize}
-                \item \textbf{Stem (L0):} Converge subito (CKA costante vicino a 1).
-                \item \textbf{Layer Profondi (L2, L3):} Deriva continua (drift). Lo spazio latente si riorganizza per migliaia di epoche, spinto dalla minimizzazione della varianza intra-classe.
+                \item \textbf{Stem (L0):} Converges immediately (CKA constant near 1).
+                \item \textbf{Deep Layers (L2, L3):} Continuous drift. The latent space reorganizes over thousands of epochs, driven by the minimization of within-class variance.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 3, Colonna 2 (Exp 4B: CKA Line chart)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 3, Column 2 (Exp 4B: CKA Line chart)
                  \includegraphics[width=\linewidth]{7.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 4B: Epoch-wise\\ (Riga 3, Col 2)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 4B: Epoch-wise\\ (Row 3, Col 2)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ---------------------------------------------------
-\begin{frame}{CKA: Riproducibilità e Degenerazione Geometrica}
+\begin{frame}{CKA: Reproducibility and Geometric Degeneracy}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            Stesso modello ($W=32$), solo \textit{Seed casuali iniziali diversi}:
+            Same model ($W=32$), only \textit{different initial random Seeds}:
             \vspace{0.2cm}
             \begin{itemize}
-                \item L0 apprende feature deterministiche ($CKA = 0.97$).
-                \item \textbf{L3 varia molto ($CKA = 0.59$).}
-                \item \textbf{Degenerazione Geometrica:} Esistono infinite rotazioni ortogonali per creare un Simplex perfetto. Le reti convergono a soluzioni logicamente isomorfe, ma in coordinate assolute diverse.
+                \item L0 learns deterministic features ($CKA = 0.97$).
+                \item \textbf{L3 varies significantly ($CKA = 0.59$).}
+                \item \textbf{Geometric Degeneracy:} There are infinite orthogonal rotations to create a perfect Simplex. Networks converge to logically isomorphic solutions, but in different absolute coordinates.
             \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{center}
-                % --- INSERISCI QUI L'IMMAGINE ---
-                % Ritaglia dal file originale: Riga 3, Colonna 3 (Exp 4C: Bar chart)
+                % --- INSERT IMAGE HERE ---
+                % Crop from original file: Row 3, Column 3 (Exp 4C: Bar chart)
                  \includegraphics[width=\linewidth]{8.png}
-                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERISCI QUI:\\ Exp 4C: Cross-Seed\\ (Riga 3, Col 3)}}}
+                %\fcolorbox{gray}{lightgray}{\parbox[c][5cm][c]{0.9\linewidth}{\centering \textbf{INSERT HERE:\\ Exp 4C: Cross-Seed\\ (Row 3, Col 3)}}}
             \end{center}
         \end{column}
     \end{columns}
 \end{frame}
 
 % ===================================================
-\section{Conclusioni}
+\section{Conclusions}
 % ===================================================
 
 % ---------------------------------------------------
-\begin{frame}{Conclusioni}
+\begin{frame}{Conclusions}
     \begin{enumerate}
-        \item \textbf{Il legame Empirico:} Il fenomeno del Double Descent è intimamente legato alla rottura (nel regime critico) e successiva ricostruzione (nel regime massivo) del Neural Collapse.
-        \item \textbf{Ottimizzazione:} SGD domina Adam, fungendo da regolarizzatore implicito che guida le reti verso un Simplex ETF perfetto.
-        \item \textbf{Geometria Profonda:} Il CKA ha rivelato la disomogeneità dell'apprendimento. Mentre i primi strati sono statici e deterministici, l'ultimo strato degenera geometricamente compiendo una lenta riorganizzazione per massimizzare i margini.
+        \item \textbf{The Empirical Link:} The Double Descent phenomenon is intimately linked to the breakdown (in the critical regime) and subsequent reconstruction (in the massive regime) of Neural Collapse.
+        \item \textbf{Optimization:} SGD dominates Adam, acting as an implicit regularizer that guides networks toward a perfect Simplex ETF.
+        \item \textbf{Deep Geometry:} CKA revealed the heterogeneity of learning. While early layers are static and deterministic, the last layer degenerates geometrically, undergoing a slow reorganization to maximize margins.
     \end{enumerate}
 \end{frame}
 
 % ---------------------------------------------------
 \begin{frame}
     \begin{center}
-        \Huge \textbf{Grazie per l'attenzione!}\\
+        \Huge \textbf{Thank you for your attention!}\\
         \vspace{1cm}
-        \Large Domande?
+        \Large Questions?
     \end{center}
 \end{frame}
 
